@@ -1,7 +1,65 @@
 import express from "express"
+import session from "express-session"
+import MongoStore from "connect-mongo"
+import mongoose from "mongoose"
 
-import __dirname from "./path"
+import __dirname from "./path.js"
+import sessionRouter from "./routes/sessions.routes.js"
 
+
+// Inicialización de servidor express, asignación de puerto y ruta de BDD
 const app = express()
 const PORT = 8080
+const DBPATH = "mongodb+srv://alcaldechristian:an591l6r7LH1Mnro@cluster0.dgphy.mongodb.net/phonemart?retryWrites=true&w=majority&appName=Cluster0"
+
+
+// Middlewares de configuración
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
+
+// Configuración de las sesiones vía Mongo Atlas (MongoStore)
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: DBPATH,
+        mongoOptions: {},
+        ttl: 15
+    }),
+    secret: "SessionSecret",
+    resave: true,
+    saveUninitialized: true
+}))
+
+
+// Conexión con la base de datos
+const connectToMongoDB = async () => {
+    try {
+        await mongoose.connect(DBPATH)
+        console.log("Conectado a MongoDB")
+    } catch (error) {
+        console.log(error)
+        process.exit()
+    }
+}
+
+connectToMongoDB()
+
+
+// Routes
+app.use("/api/sessions", sessionRouter)
+
+
+app.get('/login', (req, res) => {
+    const {email, password} = req.body
+
+    if(email == "f@f.com" && password == "1234") {
+        req.session.email = email
+        req.session.admin = true
+        res.status(200).send("Usuario logueado")
+    } else {
+        res.status(400).send("Credenciales no validas")
+    }
+})
+
+
 app.listen(PORT, () => console.log(`Escuchando en el puerto: ${PORT}`))
