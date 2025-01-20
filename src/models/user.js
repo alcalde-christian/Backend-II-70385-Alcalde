@@ -22,6 +22,10 @@ const userSchema = new Schema({
         type: Number,
         required: true
     },
+    role: {
+        type: String,
+        default: "user"
+    }
 })
 
 const userModel = model("users", userSchema)
