@@ -36,7 +36,8 @@ export const register = async (req, res) => {
     try {
         const newUser = await userModel.create({firstName, lastName, email, password, age})
 
-        return res.status(201).json({success: true, payload: newUser})
+        return res.status(201).redirect("/login")
+        //.json({success: true, payload: newUser})
     } catch (error) {
         console.log(error)
         return res.status(500).json({success: false, error: "Error al registrar usuario"})
