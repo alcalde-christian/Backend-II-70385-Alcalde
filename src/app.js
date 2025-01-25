@@ -4,7 +4,9 @@ import MongoStore from "connect-mongo"
 import mongoose from "mongoose"
 import path from 'path'
 import { engine } from "express-handlebars"
+import passport from "passport"
 
+import initializePassport from "./config/passport.config.js"
 import __dirname from "./path.js"
 import sessionRouter from "./routes/sessions.routes.js"
 import viewsRoutes from "./routes/views.routes.js"
@@ -32,6 +34,12 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+
+
+// Middleware para inicializar Passport ///////////////////////////////////////
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 // Configuración de Handlebars ////////////////////////////////////////////////
