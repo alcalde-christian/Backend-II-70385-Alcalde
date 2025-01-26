@@ -10,6 +10,7 @@ import initializePassport from "./config/passport.config.js"
 import __dirname from "./path.js"
 import sessionRouter from "./routes/sessions.routes.js"
 import viewsRoutes from "./routes/views.routes.js"
+import cookieParser from "cookie-parser"
 
 
 // Inicialización de servidor express, asignación de puerto y ruta de BDD /////
@@ -21,6 +22,7 @@ const DBPATH = "mongodb+srv://alcaldechristian:an591l6r7LH1Mnro@cluster0.dgphy.m
 // Middlewares de configuración ///////////////////////////////////////////////
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+app.use(cookieParser("CookieSecret"))
 
 
 // Configuración de las sesiones vía Mongo Atlas (MongoStore) /////////////////
@@ -66,6 +68,9 @@ connectToMongoDB()
 app.use("/public", express.static(__dirname + "/public"))
 app.use("/api/sessions", sessionRouter)
 app.use("/", viewsRoutes)
+app.get("/", (req, res) => {
+    res.status(200).send("Hola desde Inicio")
+})
 
 
 // app.get('/login', (req, res) => {

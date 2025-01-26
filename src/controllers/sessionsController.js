@@ -31,3 +31,19 @@ export const register = async (req, res) => {
         return res.status(500).json({success: false, payload: "Error al registrar usuario"})
     }
 }
+
+export const githubLogin = async (req, res) => {
+    try {
+        if(!req.user) {
+            return res.status(400).json({success: false, payload: "Ups! Algún dato no es correcto"})
+        } else {
+            req.session.user = {
+                email: req.user.email,
+                firstName: req.user.firstName
+            }
+            return res.status(200).redirect("/")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

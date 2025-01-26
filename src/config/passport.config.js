@@ -1,7 +1,9 @@
 import passport from "passport"
 import local from "passport-local"
+import GithubStrategy from "passport-github2"
 import userModel from "../models/user.js"
 import { createHash, validatePassword } from "../utils/bcrypt.js"
+import { application } from "express"
 
 const localStrategy = local.Strategy
 
@@ -40,6 +42,38 @@ const initializePassport = () => {
                 return done(null, user)
             } else {
                 return done(null, false)
+            }
+        } catch (error) {
+            console.log(error)
+            return done(error)
+        }
+    }))
+
+    passport.use("github", new GithubStrategy({
+        clientID: "Iv23li6s2aEEYiF1UJXH",
+        clientSecret: "f0570d6ba6b94e56ebadab0a4b999ad7bc8d9658",
+        callbackURL: "http://localhost:8080/api/sessions/githubcallback"
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            console.log("Github profile:\n", profile)
+            console.log("Github access token:\n", accessToken)
+            console.log("Github refresh token:\n", refreshToken)
+            
+            const user = await userModel.findOne({ email: profile._json.email})
+            
+            // N/A: Dato no proporcionado por Github
+
+            if (!user) {
+                const newUser = await userModel.create({
+                    firstName: profile._json.name,
+                    lastName: " ", // N/A
+                    email: profile._json.email,
+                    password: "1234", // N/A
+                    age: 18 // N/A
+                })
+                return done(null, user)
+            } else {
+                return done(null, user)
             }
         } catch (error) {
             console.log(error)
