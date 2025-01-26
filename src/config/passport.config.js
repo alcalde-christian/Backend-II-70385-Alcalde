@@ -3,6 +3,7 @@ import local from "passport-local"
 import GithubStrategy from "passport-github2"
 import userModel from "../models/user.js"
 import { createHash, validatePassword } from "../utils/bcrypt.js"
+import { exit } from "process"
 
 const localStrategy = local.Strategy
 
