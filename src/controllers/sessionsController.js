@@ -1,6 +1,3 @@
-import userModel from "../models/user.js"
-import { createHash, validatePassword } from "../utils/bcrypt.js"
-
 export const login = async (req, res) => {
     try {
         if (!req.user) {
