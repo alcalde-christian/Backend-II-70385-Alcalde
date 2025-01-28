@@ -36,7 +36,7 @@ export const getProduct = async (req, res) => {
         const product = await productModel.findById(productId)
 
         if (product) {
-            return res.status(200).render("templates/product", {product})
+            res.status(200).render("templates/product", {product})
         } else {
             return res.status(404).render("templates/error", {error: "Producto no encontrado"})
         }
@@ -78,12 +78,12 @@ export const updateProduct = async (req, res) => {
     try {
         const productId = req.params.pid
         const productToUpdate = req.body
-        const updatedProduct = await productModel.findByIdAndUpdate(productId, productToUpdate)
+        const updatedProduct = await productModel.findByIdAndUpdate(productId, productToUpdate, { new:true })
 
         if (!updatedProduct) {
             return res.status(404).render("templates/error", {error: "Producto no encontrado"})
         } else {
-            return res.status(200).render("templates/product", {updatedProduct})
+            res.status(200).render("templates/product", {updatedProduct})
         }
     } catch (error) {
         console.log(error)

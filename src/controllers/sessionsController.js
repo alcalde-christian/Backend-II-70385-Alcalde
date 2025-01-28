@@ -7,11 +7,11 @@ export const login = async (req, res) => {
                 email: req.user.email,
                 firstName: req.user.firstName
             }
-            return res.status(200).json({success: true, payload: "Usuario logueado correctamente"})
+            res.status(200).json({success: true, payload: "Usuario logueado correctamente"})
         }
     } catch (error) {
         console.log(error)
-        return res.status(500).json({success: false, payload: "Error al loguear usuario"})
+        res.status(500).json({success: false, payload: "Error al loguear usuario"})
     }
 }
 
@@ -21,13 +21,14 @@ export const register = async (req, res) => {
         if (!req.user) {
             return res.status(400).json({success: false, payload: "El mail ya se encuentra registrado"})
         } else {
-            return res.status(201).json({success: true, payload: "Usuario registrado correctamente"})
+            res.status(201).json({success: true, payload: "Usuario registrado correctamente"})
         }
     } catch (error) {
         console.log(error)
-        return res.status(500).json({success: false, payload: "Error al registrar usuario"})
+        res.status(500).json({success: false, payload: "Error al registrar usuario"})
     }
 }
+
 
 export const githubLogin = async (req, res) => {
     try {
@@ -38,7 +39,7 @@ export const githubLogin = async (req, res) => {
                 email: req.user.email,
                 firstName: req.user.firstName
             }
-            return res.status(200).redirect("/")
+            res.status(200).redirect("/")
         }
     } catch (error) {
         console.log(error)

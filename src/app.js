@@ -11,6 +11,7 @@ import __dirname from "./path.js"
 import sessionRouter from "./routes/sessions.routes.js"
 import viewsRoutes from "./routes/views.routes.js"
 import productRouter from "./routes/products.routes.js"
+import cartRouter from "./routes/carts.routes.js"
 import cookieParser from "cookie-parser"
 
 
@@ -69,6 +70,7 @@ connectToMongoDB()
 app.use("/public", express.static(__dirname + "/public"))
 app.use("/api/sessions", sessionRouter)
 app.use("/api/products", productRouter)
+app.use("/api/carts", cartRouter)
 app.use("/", viewsRoutes)
 app.get("/", (req, res) => {
     res.status(200).send("Hola desde Inicio")
