@@ -23,7 +23,7 @@ const initializePassport = () => {
                     password: createHash(password),
                     age
                 })
-                console.log("Datos del nuevo usuario registrado:\n", newUser)
+                //console.log("Datos del nuevo usuario registrado:\n", newUser)
                 return done(null, newUser)
             } else {
                 return done(null, false)

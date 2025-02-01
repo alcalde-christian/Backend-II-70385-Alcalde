@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from "mongoose"
+import cartModel from "./cart.js"
 
 const userSchema = new Schema({
     firstName: {
@@ -25,6 +26,33 @@ const userSchema = new Schema({
     role: {
         type: String,
         default: "user"
+    },
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: "carts"
+    }
+})
+
+/*
+
+Si en algún momento el usuario modifica alguno de sus datos personales,
+¿se crearía un nuevo carrito?
+
+*/
+
+userSchema.post("save", async function (doc) {
+    try {
+        if (!doc.cart) {
+            const newCart = await cartModel.create({ products: [] })
+            const newUser = await model("users").findByIdAndUpdate(
+                doc._id, 
+                { cart: newCart._id },
+                { new: true }
+            )
+            console.log("Datos del nuevo usuario registrado:\n", newUser)
+        }
+    } catch (e) {
+        console.log("Error al crear el carrito del usuario", error)
     }
 })
 
