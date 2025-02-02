@@ -3,11 +3,43 @@ import local from "passport-local"
 import GithubStrategy from "passport-github2"
 import userModel from "../models/user.js"
 import { createHash, validatePassword } from "../utils/bcrypt.js"
-import { exit } from "process"
+import jwt from "passport-jwt"
+
 
 const localStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt
+
+
+const cookieExtractor = (req) => {
+    let token = null
+    if (req && req.cookies) {
+        token = req.cookies["projectCookie"]
+    }
+    return token
+}
+
+
+/*
+export const passportCall = (strategy) => {
+    return async (req, res, next) => {
+        passport.authenticate(strategy, function (error, user, info) {
+            if (error) {
+                return next(error)
+            }
+            if (!user) {
+                return res.status(401).json({success: false, payload: info.messages ? info.messages : info.toString()})
+            }
+            req.user = usernext()
+        } (req, res, next))
+    }
+}
+*/
+
 
 const initializePassport = () => {
+    // Estrategia PASSPORT para registrar nuevos usuarios /////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     passport.use("register", new localStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
         
         try {
@@ -34,6 +66,9 @@ const initializePassport = () => {
         }
     }))
 
+
+    // Estrategia PASSPORT para loguear usuarios //////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     passport.use("login", new localStrategy({ usernameField: "email" }, async (username, password, done) => {
         try {
             const user = await userModel.findOne({ email: username })
@@ -49,6 +84,9 @@ const initializePassport = () => {
         }
     }))
 
+
+    // Estrategia PASSPORT para loguear usuarios mediante Github //////////////
+    ///////////////////////////////////////////////////////////////////////////
     passport.use("github", new GithubStrategy({
         clientID: "Iv23li6s2aEEYiF1UJXH",
         clientSecret: "f0570d6ba6b94e56ebadab0a4b999ad7bc8d9658",
@@ -81,7 +119,22 @@ const initializePassport = () => {
         }
     }))
 
+
+    // Estrategia PASSPORT para sesiones de usuarios //////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    passport.use("jwt", new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: "JWTSecret"
+    }, async (jwt_payload, done) => {
+        try {
+            return done(null, jwt_payload.user)
+        } catch (error) {
+            return console.log(error)
+        }
+    }))
+
     passport.serializeUser((user, done) => {
+        console.log(user)
         done(null, user._id)
     })
 

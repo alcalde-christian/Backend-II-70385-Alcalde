@@ -72,22 +72,8 @@ app.use("/api/sessions", sessionRouter)
 app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter)
 app.use("/", viewsRoutes)
-app.get("/", (req, res) => {
-    res.status(200).send("Hola desde Inicio")
-})
-
-
-// app.get('/login', (req, res) => {
-//     const {email, password} = req.body
-
-//     if(email == "f@f.com" && password == "1234") {
-//         req.session.email = email
-//         req.session.admin = true
-//         res.status(200).send("Usuario logueado")
-//     } else {
-//         res.status(400).send("Credenciales no validas")
-//     }
+// app.get("/", (req, res) => {
+//     res.status(200).send("Hola desde Inicio")
 // })
-
 
 app.listen(PORT, () => console.log(`Escuchando en el puerto: ${PORT}`))

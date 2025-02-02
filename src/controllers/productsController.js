@@ -19,7 +19,15 @@ export const getProducts = async (req, res) => {
             return res.status(404).render("templates/error", {error: "No se encontraron productos que cumplan con el filtro solicitado"})
         }
 
+        products.prevLink = products.hasPrevPage ? `http://localhost:8080?limit=${limit}&page=${products.prevPage}&filter=${req.query.filter || ``}&sort=${req.query.sort || ''}` : ''
+
+        products.nextLink = products.hasNextPage ? `http://localhost:8080?limit=${limit}&page=${products.nextPage}&filter=${req.query.filter || ``}&sort=${req.query.sort || ''}` : ''
+
+        products.isValid = !(page <= 0 || page > products.totalPages)
+
         console.log(products)
+        console.log("Es válido?", products.isValid)
+        console.log("Links,", products.nextLink, products.prevLink)
         res.status(200).render("templates/home", {products})
     } catch (error) {
         console.log(error)
