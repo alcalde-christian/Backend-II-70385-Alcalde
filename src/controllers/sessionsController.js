@@ -1,16 +1,19 @@
 import { generateToken } from "../utils/jwt.js"
 
+
+// Función para loguear usuario ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 export const login = async (req, res) => {
     try {
         if (!req.user) {
-            return res.status(401).json({success: false, payload: "Ups! Algún dato no es correcto"})
+            return res.status(401).render("templates/error", {error: "Ups! Algún dato no es correcto"})
         } else {
             const token = generateToken(req.user)
             req.session.user = {
                 email: req.user.email,
                 firstName: req.user.firstName
             }
-            
+
             res.cookie("projectCookie", token, {
                 httpOnly: true,
                 secure: false,
@@ -20,30 +23,34 @@ export const login = async (req, res) => {
             res.status(200).redirect("/")
         }
     } catch (error) {
-        console.log(error)
-        res.status(500).json({success: false, payload: "Error al loguear usuario"})
+        console.log("Error en el login del usuario:\n", error)
+        res.status(500).render("templates/error", {error: "Error al loguear usuario"})
     }
 }
 
 
+// Función para registrar usuario /////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 export const register = async (req, res) => {
     try {
         if (!req.user) {
-            return res.status(400).json({success: false, payload: "El mail ya se encuentra registrado"})
+            return res.status(400).render("templates/error", {error: "El correo electrónico ya se ha registrado"})
         } else {
-            res.status(201).json({success: true, payload: "Usuario registrado correctamente"})
+            res.status(201).redirect("/")
         }
     } catch (error) {
-        console.log(error)
-        res.status(500).json({success: false, payload: "Error al registrar usuario"})
+        console.log("Error en el registro del usuario:\n", error)
+        res.status(500).render("templates/error", {error: "Error al registrar usuario"})
     }
 }
 
 
+// Función para registrar o loguear usuario a través de GitHub ////////////////
+///////////////////////////////////////////////////////////////////////////////
 export const githubLogin = async (req, res) => {
     try {
         if(!req.user) {
-            return res.status(400).json({success: false, payload: "Ups! Algún dato no es correcto"})
+            return res.status(400).render("templates/error", {error: "Ups! Algún dato no es correcto"})
         } else {
             req.session.user = {
                 email: req.user.email,
@@ -52,6 +59,7 @@ export const githubLogin = async (req, res) => {
             res.status(200).redirect("/")
         }
     } catch (error) {
-        console.log(error)
+        console.log("Error al ingresar a través de Github:\n", error)
+        res.status(500).render("templates/error", {error: "Error al ingresar a través de Github"})
     }
 }
