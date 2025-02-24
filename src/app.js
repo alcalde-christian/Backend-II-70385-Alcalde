@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 import path from 'path'
 import { engine } from "express-handlebars"
 import passport from "passport"
+import cors from "cors"
 
 import initializePassport from "./config/passport.config.js"
 import __dirname from "./path.js"
@@ -25,6 +26,7 @@ const DBPATH = "mongodb+srv://alcaldechristian:an591l6r7LH1Mnro@cluster0.dgphy.m
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser("CookieSecret"))
+app.use(cors())
 
 
 // Configuración de las sesiones vía Mongo Atlas (MongoStore) /////////////////
@@ -72,8 +74,5 @@ app.use("/api/sessions", sessionRouter)
 app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter)
 app.use("/", viewsRoutes)
-// app.get("/", (req, res) => {
-//     res.status(200).send("Hola desde Inicio")
-// })
 
 app.listen(PORT, () => console.log(`Escuchando en el puerto: ${PORT}`))
