@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from "express"
 import session from "express-session"
 import MongoStore from "connect-mongo"
@@ -19,24 +20,23 @@ import cookieParser from "cookie-parser"
 // Inicialización de servidor express, asignación de puerto y ruta de BDD /////
 const app = express()
 const PORT = 8080
-const DBPATH = "mongodb+srv://alcaldechristian:an591l6r7LH1Mnro@cluster0.dgphy.mongodb.net/phonemart?retryWrites=true&w=majority&appName=Cluster0"
 
 
 // Middlewares de configuración ///////////////////////////////////////////////
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(cookieParser("CookieSecret"))
+app.use(cookieParser(process.env.SECRET_COOKIE))
 app.use(cors())
 
 
 // Configuración de las sesiones vía Mongo Atlas (MongoStore) /////////////////
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: DBPATH,
+        mongoUrl: process.env.DBPATH,
         mongoOptions: {},
-        ttl: 15
+        ttl: 86400 // 1 día
     }),
-    secret: "SessionSecret",
+    secret: process.env.SECRET_SESSION,
     resave: true,
     saveUninitialized: true
 }))
@@ -57,7 +57,7 @@ app.set('views', path.join(__dirname, 'views'))
 // Conexión con la base de datos //////////////////////////////////////////////
 const connectToMongoDB = async () => {
     try {
-        await mongoose.connect(DBPATH)
+        await mongoose.connect(process.env.DBPATH)
         console.log("Conectado a MongoDB")
     } catch (error) {
         console.log(error)

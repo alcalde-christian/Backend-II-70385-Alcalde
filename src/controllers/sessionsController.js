@@ -36,7 +36,7 @@ export const register = async (req, res) => {
         if (!req.user) {
             return res.status(400).render("templates/error", {error: "El correo electrónico ya se ha registrado"})
         } else {
-            res.status(201).redirect("/")
+            res.status(201).redirect("/login")
         }
     } catch (error) {
         console.log("Error en el registro del usuario:\n", error)
