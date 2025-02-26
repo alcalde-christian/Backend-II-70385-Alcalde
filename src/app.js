@@ -10,10 +10,7 @@ import cors from "cors"
 
 import initializePassport from "./config/passport.config.js"
 import __dirname from "./path.js"
-import sessionRouter from "./routes/sessions.routes.js"
-import viewsRoutes from "./routes/views.routes.js"
-import productRouter from "./routes/products.routes.js"
-import cartRouter from "./routes/carts.routes.js"
+import indexRouter from "./routes/index.routes.js"
 import cookieParser from "cookie-parser"
 
 
@@ -70,9 +67,6 @@ connectToMongoDB()
 
 // Rutas //////////////////////////////////////////////////////////////////////
 app.use("/public", express.static(__dirname + "/public"))
-app.use("/api/sessions", sessionRouter)
-app.use("/api/products", productRouter)
-app.use("/api/carts", cartRouter)
-app.use("/", viewsRoutes)
+app.use("/", indexRouter)
 
 app.listen(PORT, () => console.log(`Escuchando en el puerto: ${PORT}`))
