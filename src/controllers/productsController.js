@@ -25,7 +25,7 @@ export const getProducts = async (req, res) => {
 
         products.isValid = !(page <= 0 || page > products.totalPages)
 
-        console.log(products)
+        // console.log(products)
         console.log("Es válido?", products.isValid)
         console.log("Links,", products.nextLink, products.prevLink)
         res.status(200).render("templates/home", {products})
