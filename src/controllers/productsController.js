@@ -48,6 +48,10 @@ export const getProduct = async (req, res) => {
         } else {
             return res.status(404).render("templates/error", {error: "Producto no encontrado"})
         }
+        //         //
+        // Testing //
+        //         //
+        console.log("\nFunción: getProduct\nEl producto consultado es:\n", product)
     } catch (error) {
         console.log(error)
         res.status(500).render("templates/error", {error})

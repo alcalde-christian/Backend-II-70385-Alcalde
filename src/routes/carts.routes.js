@@ -9,7 +9,7 @@ cartRouter.post("/", auth("user"), createCart)
 cartRouter.post("/:cid/product/:pid", auth("user"), addProductToCart)
 cartRouter.put("/:cid", auth("user"), updateProducts)
 cartRouter.put("/:cid/product/:pid", auth("user"), updateProductQty)
-cartRouter.delete("/:cid/product:pid", auth("user"), removeProduct)
+cartRouter.delete("/:cid/product/:pid", auth("user"), removeProduct)
 cartRouter.delete("/:cid", auth("user"), emptyCart)
 cartRouter.post("/:cid/checkout", auth("user"), checkout)
 

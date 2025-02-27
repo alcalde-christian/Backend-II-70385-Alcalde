@@ -125,7 +125,7 @@ export const updateProductQty = async (req, res) => {
             return res.status(404).json({success: false, payload: "Carrito no encontrado"})
         } 
 
-        const productIndex = cartToUpdate.products.findIndex(prod => prod._id == productId)
+        const productIndex = cartToUpdate.products.findIndex(prod => prod.id_prod._id.toString() == productId)
 
         if (productIndex == -1) {
             return res.status(404).json({success: false, payload: "Producto no encontrado"})
@@ -134,6 +134,10 @@ export const updateProductQty = async (req, res) => {
         cartToUpdate.products[productIndex].qty = quantity
         cartToUpdate.save()
         res.status(200).json({success: true, payload: cartToUpdate})
+        //         //
+        // Testing //
+        //         //
+        console.log("\nFunción: updateProductQty\nEl carrito actualizado es:\n", cartToUpdate)
     } catch (error) {
         console.log(error)
         res.status(500).render("templates/error", {error})
@@ -153,7 +157,7 @@ export const removeProduct = async (req, res) => {
             return res.status(404).json({success: false, payload: "Carrito no encontrado"})
         } 
 
-        const productIndex = cartToUpdate.products.findIndex(prod => prod._id == productId)
+        const productIndex = cartToUpdate.products.findIndex(prod => prod.id_prod._id.toString() == productId)
 
         if (productIndex == -1) {
             return res.status(404).json({success: false, payload: "Producto no encontrado"})
@@ -162,6 +166,10 @@ export const removeProduct = async (req, res) => {
         cartToUpdate.products.splice(productIndex, 1)
         cartToUpdate.save()
         res.status(200).json({success: true, payload: cartToUpdate})
+        //         //
+        // Testing //
+        //         //
+        console.log("\nFunción: removeProduct\nEl carrito actualizado es:\n", cartToUpdate)
     } catch (error) {
         console.log(error)
         res.status(500).render("templates/error", {error})
@@ -183,6 +191,10 @@ export const emptyCart = async (req, res) => {
         cartToUpdate.products = []
         cartToUpdate.save()
         res.status(200).json({success: true, payload: cartToUpdate})
+        //         //
+        // Testing //
+        //         //
+        console.log("\nFunción: emptyCart\nEl carrito actualizado es:\n", cartToUpdate)
     } catch (error) {
         console.log(error)
         res.status(500).render("templates/error", {error})
@@ -226,6 +238,10 @@ export const checkout = async (req, res) => {
             console.log("\nFunción: checkout\nLos productos sin stock son:\n", stockInsufficient)
             console.log("\nFunción: checkout\nEl carrito quedó:\n", cartToCheckout)
             return res.status(409).json({success: false, payload: stockInsufficient})
+        }
+
+        if (cartToCheckout.products.length == 0) {
+            return res.status(400).json({success: false, payload: "No existen productos agregados al carrito"})
         }
 
         let totalAmount = 0
